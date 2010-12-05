@@ -1,9 +1,10 @@
-theUILang.logoff           = "Log off";
-theUILang.logoffUsername   = "Username";
-theUILang.logoffPassword   = "Password";
-theUILang.logoffChange     = "Switch user";
-theUILang.logoffPrompt     = "Do you want to switch user, log off or cancel this operation?";
-theUILang.logoffEmpty      = "<-- cannot be empty";
-theUILang.logoffNote       = "<strong>Note:</strong> If switch fails (e.g. entered wrong username/password) you need to cancel the login prompt and refresh the page before logging in again.";
+theUILang.logoff             = "Déconnecter";
+theUILang.logoffUsername     = "Login";
+theUILang.logoffPassword     = "Mdp";
+theUILang.logoffSwitch       = "Changer d'utilisateur";
+theUILang.logoffPrompt       = "Voulez-vous déconnecter ou annuler?";
+theUILang.logoffSwitchPrompt = "Voulez-vous changer d'utilisateur, vous déconnecter ou annuler?";
+theUILang.logoffEmpty        = "<-- ne peut pas être vide";
+theUILang.logoffNote         = "<strong>Note:</strong> Si le changement rate (ex. indiquer un mauvais login/mdp) vous devez annuler lors de la demande de login et rafraichir la page avant de vous connecter à nouveau.";
 
 thePlugins.get("logoff").langLoaded();
