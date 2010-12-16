@@ -10,10 +10,15 @@ if ($dirs && count($dirs) > 0)
         if ($dir[0] != "." && $dir != $me)
             $users[] = $dir;
 
+$allowed = 0;
+foreach (explode(",", $allowSwitch) as $as)
+    if (trim($as) == $me)
+        $allowed = 1;
+
 $jResult .= "plugin.logoffURL = '" . $logoffURL . "';";
 $jResult .= "plugin.me = '" . $me . "';";
 $jResult .= "plugin.users = " . json_encode($users) . ";";
-$jResult .= "plugin.allowSwitch = " . json_encode(explode(",", $allowSwitch)) . ";";
+$jResult .= "plugin.allowSwitch = " . $allowed . ";";
 
 $theSettings->registerPlugin("logoff");
 ?>

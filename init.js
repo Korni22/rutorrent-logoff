@@ -6,14 +6,9 @@ plugin.onLangLoaded = function()
     var before = (theWebUI.systemInfo.rTorrent.started ? "add" : "settings");
     this.addButtonToToolbar("logoff", theUILang.logoff + " (" + plugin.me + ")", "theDialogManager.show('logoffDlg')", before);
     this.addSeparatorToToolbar(before);
-    var allowSwitch = false;
     var multi = false;
 
-    for (i in plugin.allowSwitch)
-        if (plugin.allowSwitch[i] == plugin.me)
-            allowSwitch = true;
-
-    if (allowSwitch) {
+    if (plugin.allowSwitch) {
         var options = "";
         for (var i = 0; i < plugin.users.length; i++)
             options += "<option value=\"" + plugin.users[i] + "\">" + plugin.users[i] + "</option>";
@@ -91,7 +86,6 @@ plugin.onLangLoaded = function()
                 xmlhttp.open("GET", this.action, true, "logoff", "logoff");
                 xmlhttp.onreadystatechange = function() { if (this.readyState == 4) document.location = plugin.logoffURL; };
                 xmlhttp.send(null);
-                xmlhttp.abort();
             }
         } catch (e) {}
 
