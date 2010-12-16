@@ -1,4 +1,6 @@
 <?php
+eval(getPluginConf("logoff"));
+
 $me = getUser();
 $users = array();
 
@@ -8,8 +10,10 @@ if ($dirs && count($dirs) > 0)
         if ($dir[0] != "." && $dir != $me)
             $users[] = $dir;
 
+$jResult .= "plugin.logoffURL = '" . $logoffURL . "';";
 $jResult .= "plugin.me = '" . $me . "';";
 $jResult .= "plugin.users = " . json_encode($users) . ";";
+$jResult .= "plugin.allowSwitch = " . json_encode(explode(",", $allowSwitch)) . ";";
 
 $theSettings->registerPlugin("logoff");
 ?>
