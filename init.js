@@ -10,7 +10,7 @@ plugin.onLangLoaded = function()
 
     if (plugin.allowSwitch) {
         var options = "";
-        for (var i = 0; i < plugin.users.length; i++)
+        for (i in plugin.users)
             options += "<option value=\"" + plugin.users[i] + "\">" + plugin.users[i] + "</option>";
 
         var switchUser = "";
@@ -24,7 +24,8 @@ plugin.onLangLoaded = function()
                 "</select>"+
             "</div>"+
             "<div>"+
-                "<label for=\"login.password\">" + theUILang.logoffPassword + ":</label> <input type=\"password\" id=\"login.password\" class=\"Textbox\" /> <span id=\"logoffPassEmpty\"></span>"+
+                "<label for=\"login.password\">" + theUILang.logoffPassword + ":</label> "+
+                "<input type=\"password\" id=\"login.password\" class=\"Textbox\" /> <span id=\"logoffPassEmpty\"></span>"+
             "</div>";
         }
     }
@@ -36,11 +37,17 @@ plugin.onLangLoaded = function()
         "<div id=\"logoffDlg-buttons\" class=\"aright buttons-list\">"+
             (multi ? "<input type=\"button\" class=\"Button\" value=\"" + theUILang.logoffSwitch + "\" id=\"logoffSwitch\">" : "")+
             "<input type=\"button\" class=\"Button\" value=\"" + theUILang.logoff + "\" id=\"logoffComplete\">"+
-            "<input type=\"button\" class=\"Button\" value=\"" + theUILang.Cancel + "\" id=\"logoffCancel\">"+
+            "<input type=\"button\" class=\"Button\" value=\"" + theUILang.Cancel + "\" id=\"logoffCancel\" onclick=\"theDialogManager.hide('logoffDlg');\">"+
         "</div>",
     true);
 
     if (multi) {
+        $($$("login.password")).keydown(function(event)
+        {
+            if ((event.which && event.which == 13) || (event.keyCode && event.keyCode == 13))
+                $("#logoffSwitch").trigger("click");
+        });
+
         $("#logoffSwitch").click(function()
         {
             if ($($$("login.password")).val() == "") {
@@ -48,54 +55,47 @@ plugin.onLangLoaded = function()
                 return(false);
             }
             $("#logoffPassEmpty").html("");
+            $("#logoffSwitch").attr("disabled", "disabled");
 
-            if (browser.isFirefox3x) {
-                try {
+            try {
+                if (browser.isFirefox) {
                     var xmlhttp = new XMLHttpRequest();
-                    xmlhttp.open("GET", document.location.href, true, $($$("login.username")).val(), $($$("login.password")).val());
+                    xmlhttp.open("POST", document.location.href, true, $($$("login.username")).val(), $($$("login.password")).val());
                     xmlhttp.onreadystatechange = function() { if (this.readyState == 4) theWebUI.reload(); };
                     xmlhttp.send(null);
-                } catch (e) {}
-            } else {
-                try {
+                } else {
                     var xmlhttp = new XMLHttpRequest();
-                    xmlhttp.open("GET", this.action, true, $($$("login.username")).val(), $($$("login.password")).val());
+                    xmlhttp.open("POST", this.action, true, $($$("login.username")).val(), $($$("login.password")).val());
                     xmlhttp.onreadystatechange = function() { if (this.readyState == 4) { document.location = this.action; theWebUI.reload(); } };
                     xmlhttp.send(null);
-                } catch (e) {}
-            }
-
-            return(false);
+                }
+            } catch (e) { alert("Error: " + e); }
         });
     }
 
     $("#logoffComplete").click(function()
     {
+        $("#logoffComplete").attr("disabled", "disabled");
         try {
             if (browser.isIE7up) {
                 document.execCommand("ClearAuthenticationCache");
                 document.location = plugin.logoffURL;
-            } else if (browser.isFirefox3x){
+            } else if (browser.isFirefox) {
                 var xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("GET", document.location.href, true, "logoff", "logoff");
+                xmlhttp.open("POST", document.location.href, true, "logoff", "logoff");
                 xmlhttp.onreadystatechange = function() { if (this.readyState == 4) document.location = plugin.logoffURL; };
                 xmlhttp.send(null);
-                xmlhttp.abort();
+                if (browser.isFirefox3x)
+                    xmlhttp.abort();
             } else {
                 var xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("GET", this.action, true, "logoff", "logoff");
+                xmlhttp.open("POST", this.action, true, "logoff", "logoff");
                 xmlhttp.onreadystatechange = function() { if (this.readyState == 4) document.location = plugin.logoffURL; };
                 xmlhttp.send(null);
+                window.logoffxmlhttp = xmlhttp;
+                window.setTimeout("logoffxmlhttp.abort()", plugin.abortMs);
             }
-        } catch (e) {}
-
-        return(false);
-    });
-
-    $("#logoffCancel").click(function()
-    {
-        theDialogManager.hide("logoffDlg");
-        return(false);
+        } catch (e) { alert("Error: " + e); }
     });
 }
 

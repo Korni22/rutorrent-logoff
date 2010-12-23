@@ -19,6 +19,7 @@ $jResult .= "plugin.logoffURL = '" . $logoffURL . "';";
 $jResult .= "plugin.me = '" . $me . "';";
 $jResult .= "plugin.users = " . json_encode($users) . ";";
 $jResult .= "plugin.allowSwitch = " . $allowed . ";";
+$jResult .= "plugin.abortMs = " . $abortMs . ";";
 
 $theSettings->registerPlugin("logoff");
 ?>
